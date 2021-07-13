@@ -5,7 +5,7 @@
 
 ## Descrição do Projeto
 <p>
-Alurakut é uma forma nostalgica de relembrar grandes momentos que passamos no famoso Orkut  e você pode ver o resultado final clicando <a href="https://alura-kut-wellingtonfreitas.vercel.app/">aqui.<a/>
+Alurakut é uma forma nostalgica de relembrar grandes momentos que passamos no famoso Orkut  e você pode ver o resultado final clicando <a href="https://alura-kut-wellingtonfreitas.vercel.app/" target="_blank">aqui.<a/>
  </p>
 ## Tecnologias
 
