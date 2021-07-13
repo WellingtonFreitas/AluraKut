@@ -1,7 +1,7 @@
 # Alurakut
 
 
-<img alt="AluraKut" src="https://github.com/WellingtonFreitas/AluraKut/blob/main/images/capa.png?raw=true" width="900px">
+<img alt="AluraKut" src="./images/capa.png?raw=true" width="900px">
 
 ## Descrição do Projeto
 <p>
