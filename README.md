@@ -52,19 +52,7 @@ ou
 5. yarn add styled-components --dev
 ```
 ```
-6. npm install eslint --save-dev
 
-ou
-
-7. yarn add eslint --dev
-```
-
-```
-8. npm install --save @crello/react-lottie
-
-ou
-
-9. yarn add @crello/react-lottie
 ```
 
 * Executando o Projeto
