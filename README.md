@@ -1,9 +1,11 @@
 # Alurakut
 
-<img alt="AluraKut" src=".github/payflow-logo.png" width="200px">" 
+
+<img alt="AluraKut" src="https://github.com/WellingtonFreitas/AluraKut/blob/main/images/capa.png?raw=true" width="900px">
+
 ## Descrição do Projeto
 <p>
-Alurakut é uma forma nostalgica de relembrar grandes momentos que passamos no famoso Orkut  e você pode ver o resultado final clicando <a href="">aqui.<a/>
+Alurakut é uma forma nostalgica de relembrar grandes momentos que passamos no famoso Orkut  e você pode ver o resultado final clicando <a href="https://alura-kut-wellingtonfreitas.vercel.app/">aqui.<a/>
  </p>
 ## Tecnologias
 
