@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import MainGrid from '../src/components/MainGrid';
 import Box from '../src/components/Box';
 import {
@@ -8,142 +8,337 @@ import {
 } from '../src/lib/AlurakutCommons';
 
 import { ProfileRelationsBoxWrapper } from "../src/components/ProfileRelations";
+import GithubApi from '../src/services/GithubApi'
 
-function ProfileSidebar(propriedades) {
+// Função que retorna os dados do usuário a partir de seu username utilizando a API do github 
+function ProfileSidebar({ githubUser }) {
   return (
     <Box as="aside">
       <img
-        src={`https://github.com/${propriedades.githubUser}.png`}
-        style={{ borderRadius: "8px" }}
+        src={`https://github.com/${githubUser}.png`}
+        style={{ borderRadius: '8px' }}
       />
       <hr />
       <p>
-        <a className="boxLink" href={`https://github.com/${propriedades.githubUser}`} >
-          @{propriedades.githubUser}
+        <a className="boxLink" href={`https://github.com/${githubUser}`}>
+          @{githubUser}
         </a>
       </p>
       <hr />
-      <AlurakutProfileSidebarMenuDefault></AlurakutProfileSidebarMenuDefault>
+      <AlurakutProfileSidebarMenuDefault />
     </Box>
-  );
+  )
 }
 
+
 export default function Home() {
-  const [comunidades, setComunidades] = React.useState([
+
+  const githubUser = 'wellingtonfreitas';
+  const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState([]);
+  const [isShowingMoreFollowers, setIsShowingMoreFollowers] = useState(false);
+  const [isShowingMoreCommunities, setIsShowingMoreCommunities] = useState(false);
+  const [isShowingMoreFollowing, setIsShowingMoreFollowing] = useState(false);
+
+  const [communities, setCommunities] = useState([
     {
-      id: '1111',
-      title: 'Odeio esperar resposta no MSN',
-      image: 'https://img10.orkut.br.com/community/9197344aa3f8d682ece581e1146bec4a.jpg',
+      id: '1',
+      title: 'Eu odeio acordar cedo',
+      image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg'
     },
     {
-      id: '222',
+      id: '2',
       title: 'V.A.S.P',
       image: 'https://img10.orkut.br.com/community/17884556195e66cd905d6e14.96887551_43880bce0fd32d0d00c078eed1dbed55.jpg',
+
     },
     {
-      id: '333',
-      title: 'Eu odeio acordar cedo',
-      image: 'https://img10.orkut.br.com/community/52cc4290facd7fa700b897d8a1dc80aa.jpg'
+      id: '3',
+      title: 'Eu nunca morri na minha vida',
+      image: 'https://img10.orkut.br.com/community/815617765e671c18b30592.81748533_f936bd2e36287ae53d89ce27d36f663e.jpg'
     },
-  ]);
+    {
+      id: '4',
+      title: 'Queremos Yakut 2 Litros',
+      image: 'https://img10.orkut.br.com/community/543e2091b6a00799f961b5560157011e.jpg'
+    },
+    {
+      id: '5',
+      title: 'Eu odeio segunda-feira',
+      image: 'https://img10.orkut.br.com/community/6b1e4e7ee1bae6cf8ef4f7221de03520.png'
+    },
+    {
+      id: '6',
+      title: 'Queria sorvete mas era feijão',
+      image: 'https://img10.orkut.br.com/community/5772468e52cea8b6dc2d07653185140b.jpg'
+    },
+    {
+      id: '7',
+      title: 'Queria sorvete mas era feijão',
+      image: 'https://img10.orkut.br.com/community/5772468e52cea8b6dc2d07653185140b.jpg'
+    },
+  ])
 
-  const usuarioAleatorio = "wellingtonfreitas";
-  const pessoasFavoritas = [
-    "juunegreiros",
-    "omariosouto",
-    "peas",
-    "rafaballerini",
-    "marcobrunodev",
-    "felipefialho",
-  ];
+  // função para criar uma comunidade
+  function handleCreateCommunity(event) {
+
+    event.preventDefault();
+
+    const formData = new FormData(event.target)
+
+    const community = {
+      id: new Date().toISOString(),
+      title: formData.get('title'),
+      image: formData.get('image'),
+      link: formData.get('link')
+    }
+
+    setCommunities([...communities, community])
+
+  }
+
+  useEffect(() => {
+    GithubApi.getFollowers(githubUser).then((res) => {
+      setFollowers(res);
+    });
+  }, [githubUser]);
+
+  useEffect(() => {
+    GithubApi.getFollowing(githubUser).then((res) => {
+      setFollowing(res);
+    });
+  }, [githubUser]);
+
+  function handleShowMoreFollowers(e) {
+    e.preventDefault();
+    setIsShowingMoreFollowers(!isShowingMoreFollowers);
+  }
+
+  function handleShowMoreCommunities(e) {
+    e.preventDefault();
+    setIsShowingMoreCommunities(!isShowingMoreCommunities);
+  }
+
+  function handleShowMoreFollowing(e) {
+    e.preventDefault();
+    setIsShowingMoreFollowing(!isShowingMoreFollowing);
+  }
+
 
   return (
     <>
-      <AlurakutMenu />
+      <AlurakutMenu githubUser={githubUser} />
+
       <MainGrid>
-        <div className="profileArea" style={{ gridArea: "profileArea" }}>
-          <ProfileSidebar githubUser={usuarioAleatorio} />
+
+        <div className="profileArea" style={{ gridArea: 'profileArea' }}>
+          <ProfileSidebar githubUser={githubUser} />
         </div>
-        <div className="welcomeArea" style={{ gridArea: "welcomeArea" }}>
-          <Box>
-            <h1 className="title">Bem vindo(a)</h1>
 
-            <OrkutNostalgicIconSet />
+        <div className="welcomeArea" style={{ gridArea: 'welcomeArea' }}>
+          <Box>
+            <h1 className="title">
+              Bem vindo(a)!
+            </h1>
+            <OrkutNostalgicIconSet confiavel={3} legal={3} sexy={3} />
           </Box>
+
           <Box>
-            <h2 className="subTitle">O que voce deseja fazer?</h2>
 
-            <form onSubmit={
-              (event) => {
-                event.preventDefault();
-                const dadosDoForm = new FormData(event.target);
-                const comunidade = {
-                  id: new Date().toDateString(),
-                  title: dadosDoForm.get('title'),
-                  imagem: dadosDoForm.get('image')
-                }
-                const comunidadesAtualizadas = [...comunidades, comunidade]
-                setComunidades(comunidadesAtualizadas)
-              }
-            } >
+            <h2 className="subTitle">Crie sua própria comunidade !</h2>
+
+            <form onSubmit={(event) => handleCreateCommunity(event)}>
+
               <div>
-                <input placeholder="Qual vai ser o nome da sua comunidade?" name="title"
-                  aria-label="Qual vai ser o nome da sua comunidade?"
-                />
-              </div>
-              <div>
-                <input placeholder="Coloque a URL para usarmos de capa" name="image"
-                  aria-label="Coloque a URL para usarmos de capa"
+                <label className="label">Comunidade</label>
+                <input placeholder="insira aqui o nome da comunidade"
+                  name="title"
+                  type="text"
                 />
               </div>
 
-              <button> Criar comunidade</button>
+              <div>
+                <label className="label">Imagem</label>
+                <input placeholder="URL da imagem para capa"
+                  name="image"
+                  type="file"
+                />
+              </div>
+
+              <div>
+                <label className="label">Link</label>
+                <input placeholder="insira um link para sua nova comunidade"
+                  name="link"
+                />
+              </div>
+
+              <button>
+                Criar comunidade
+              </button>
+
             </form>
 
           </Box>
         </div>
-        <div
-          className="profileRelationsArea"
-          style={{ gridArea: "profileRelationsArea" }}
-        >
-          <ProfileRelationsBoxWrapper>
+
+        <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
+
+          <ProfileRelationsBoxWrapper isShowingMoreItems={isShowingMoreCommunities}>
             <h2 className="smallTitle">
-              Pessoas da comunidade ({comunidades.length})
+              Comunidades ({communities.length})
             </h2>
 
             <ul>
-              {comunidades.map((itemAtual) => {
+              {communities.slice(0, 6).map((c) => {
                 return (
-                  <li key={itemAtual.id}>
-                    <a href={`/users/${itemAtual.title}`} key={itemAtual}>
-                      <img src={itemAtual.image} />
-                      <span>{itemAtual.title}</span>
+                  <li key={c.id}>
+                    <a href={`/users/${c.title}`}>
+                      <img src={c.image} />
+                      <span>{c.title}</span>
                     </a>
                   </li>
-                );
+                )
               })}
             </ul>
+
+            {communities.length > 6 && (
+              <>
+                <hr />
+                <button
+                  className="toggleButton"
+                  onClick={(e) => handleShowMoreCommunities(e)}
+                >
+                  {isShowingMoreCommunities ? 'Ver menos' : 'Ver mais'}
+                </button>
+
+              </>
+            )}
+            {isShowingMoreCommunities && (
+              <>
+                <ul>
+                  {communities.map((c) => {
+                    return (
+                      <li key={c.id}>
+                        <a href={`/users/${c.title}`}>
+                          <img src={c.image} />
+                          <span>{c.title}</span>
+                        </a>
+                      </li>
+                    )
+                  })}
+                </ul>
+
+                {communities.length > 6 && (
+                  <>
+                    <hr />
+                    <button
+                      className="toggleButton"
+                      onClick={(e) => handleShowMoreCommunities(e)}
+                    >
+                      {isShowingMoreCommunities ? 'Ver menos' : 'Ver mais'}
+                    </button>
+
+                  </>
+                )}
+
+              </>
+            )}
           </ProfileRelationsBoxWrapper>
-          <ProfileRelationsBoxWrapper>
+
+          <ProfileRelationsBoxWrapper isShowingMoreItems={isShowingMoreFollowers}>
             <h2 className="smallTitle">
-              Pessoas da Favoritas ({pessoasFavoritas.length})
+              Seguidores do GitHub ({followers.length})
             </h2>
 
             <ul>
-              {pessoasFavoritas.map((itemAtual) => {
+              {followers.slice(0, 6).map((f) => {
                 return (
-                  <li key={itemAtual}>
-                    <a href={`/users/${itemAtual}`} >
-                      <img src={`https://github.com/${itemAtual}.png`} />
-                      <span>{itemAtual}</span>
+                  <li key={f.id}>
+                    <a href={`https://github.com/${f.login}`}>
+                      <img src={`https://github.com/${f.login}.png`} />
+                      <span>{f.login}</span>
                     </a>
                   </li>
-                );
+                )
               })}
             </ul>
+            {followers.length > 6 && (
+              <>
+                <hr />
+                <button
+                  className="toggleButton"
+                  onClick={(e) => handleShowMoreFollowers(e)}
+                >
+                  {isShowingMoreFollowers ? 'Ver menos' : 'Ver mais'}
+                </button>
+              </>
+            )}
           </ProfileRelationsBoxWrapper>
+
+          <ProfileRelationsBoxWrapper isShowingMoreItems={isShowingMoreFollowing}>
+            <h2 className="smallTitle">
+              Seguindo no GitHub ({following.length})
+            </h2>
+
+            <ul>
+              {following.slice(0, 6).map((f) => {
+                return (
+                  <li key={f.id}>
+                    <a href={`https://github.com/${f.login}`}>
+                      <img src={`https://github.com/${f.login}.png`}
+
+                      />
+                      <span>{f.login}</span>
+                    </a>
+                  </li>
+                )
+              })}
+            </ul>
+            {following.length > 6 && (
+              <>
+                <hr />
+                <button
+                  className="toggleButton"
+                  onClick={(e) => handleShowMoreFollowing(e)}
+                >
+                  {isShowingMoreFollowing ? 'Ver menos' : 'Ver mais'}
+                </button>
+              </>
+            )}
+            {isShowingMoreFollowing && (
+              <>
+                <ul>
+                  {communities.map((c) => {
+                    return (
+                      <li key={c.id}>
+                        <a href={`/users/${c.title}`}>
+                          <img src={c.image} />
+                          <span>{c.title}</span>
+                        </a>
+                      </li>
+                    )
+                  })}
+                </ul>
+
+                {following.length > 6 && (
+                  <>
+                    <hr />
+                    <button
+                      className="toggleButton"
+                      onClick={(e) => handleShowMoreFollowing(e)}
+                    >
+                      {isShowingMoreFollowing ? 'Ver menos' : 'Ver mais'}
+                    </button>
+
+                  </>
+                )}
+              </>
+            )}
+          </ProfileRelationsBoxWrapper>
+
         </div>
+
       </MainGrid>
     </>
-  );
+  )
 }
